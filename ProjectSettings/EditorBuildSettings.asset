@@ -8,4 +8,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/ScenesKamal/Menu_Iniciar.unity
+    guid: 3cbd2f86998f6204b8fb637d590d9114
+  - enabled: 1
+    path: Assets/ScenesKamal/TempJogo.unity
+    guid: 2f6d33095ae6168479f7bc08045d826d
   m_configObjects: {}
