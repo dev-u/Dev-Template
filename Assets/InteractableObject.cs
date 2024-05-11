@@ -10,21 +10,26 @@ public class InteractableObject : MonoBehaviour
     #region Fields and Properties
     // Private Fields
     private Collider2D _col2D;
-    
+
     // Serialized Fields
-    [SerializeField] private bool isInteractable = true;
-    [SerializeField] private bool isContactInteractable = true;
-    [SerializeField] private ContactFilter2D contactFilter;
+    [Tooltip("Obejto pode ser interagido")]
+    [SerializeField]private bool isInteractable = true;
+    [Tooltip("Uma tecla é necessária para interagir com o objeto")]
+    [SerializeField] private bool isKeyInteractable = true;
+    [Tooltip("Tecla para interagir com o objeto")]
     [SerializeField] private KeyCode interactKey = KeyCode.E;
-    [SerializeField] private UnityEvent onInteract;
+    [Tooltip("Filtro de colisão para interação")]
+    [SerializeField] private ContactFilter2D contactFilter;
+    [Tooltip("Evento de interação com o objeto")]
+    [SerializeField] private UnityEvent<GameObject> onInteract;
 
 
     // Public Properties
     public bool IsInteractable => isInteractable;
-    public bool IsContactInteractable => isContactInteractable;
+    public bool IsKeyInteractable => isKeyInteractable;
     public ContactFilter2D ContactFilter => contactFilter;
     public KeyCode InteractKey => interactKey;
-    public UnityEvent OnInteract => onInteract;
+    public UnityEvent<GameObject> OnInteract => onInteract;
 
     #endregion
 
@@ -46,7 +51,7 @@ public class InteractableObject : MonoBehaviour
             // Checar se o objeto com o qual está colidindo está na layer mask
             if (colliders.Any(c => contactFilter.layerMask == (contactFilter.layerMask | (1 << c.gameObject.layer))))
             {
-                if (isContactInteractable)
+                if (!isKeyInteractable)
                 {
                     Interact();
                 }
@@ -61,7 +66,7 @@ public class InteractableObject : MonoBehaviour
 
     public void Interact()
     {
-        onInteract.Invoke();
+        onInteract.Invoke(gameObject);
     }
 
 }

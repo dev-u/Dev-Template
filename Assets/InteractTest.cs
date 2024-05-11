@@ -7,13 +7,20 @@ public class InteractTest : MonoBehaviour
 
     
 
-    public void TestContactInteract()
+    public void TestContactInteract(GameObject gameObject)
     {
         Debug.Log("Interacted on Contact!");
+        Debug.Log("Object: " + gameObject.name);
         Destroy(gameObject);
     }
 
-    public void TestKeyInteract()
+    public void TestKeyInteract(GameObject gameObject)
+    {
+        Debug.Log("Interacted!");
+        Destroy(gameObject);
+    }
+
+    private void TestInteract(GameObject gameObject)
     {
         Debug.Log("Interacted!");
         Destroy(gameObject);

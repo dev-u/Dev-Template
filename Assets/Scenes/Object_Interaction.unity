@@ -299,7 +299,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isInteractable: 1
-  isContactInteractable: 1
+  isKeyInteractable: 0
+  interactKey: 101
   contactFilter:
     useTriggers: 0
     useLayerMask: 1
@@ -314,14 +315,13 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  interactKey: 101
   onInteract:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1043102315}
         m_TargetAssemblyTypeName: InteractTest, Assembly-CSharp
         m_MethodName: TestContactInteract
-        m_Mode: 1
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -564,7 +564,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isInteractable: 1
-  isContactInteractable: 0
+  isKeyInteractable: 1
+  interactKey: 101
   contactFilter:
     useTriggers: 0
     useLayerMask: 1
@@ -579,7 +580,6 @@ MonoBehaviour:
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
-  interactKey: 101
   onInteract:
     m_PersistentCalls:
       m_Calls:
