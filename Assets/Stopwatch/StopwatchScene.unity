@@ -1395,10 +1395,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _textMeshProUGUI: {fileID: 320379856}
   _isCountdown: 0
-  _startTime: 0
-  _hasLimit: 1
-  _stopTime: 400
-  _timerFormat: 2
+  _startTime: 20
+  _hasLimit: 0
+  _stopTime: 10
+  _timerFormat: 1
 --- !u!4 &918475806
 Transform:
   m_ObjectHideFlags: 0

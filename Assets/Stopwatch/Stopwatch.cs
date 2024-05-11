@@ -98,7 +98,7 @@ public class Stopwatch : MonoBehaviour
     //Resets the timer, but does not make it stop ticking
     public void ResetTimer()
     {
-        _currentTime = 0;
+        _currentTime = _startTime;
     }
 
     //WaitAtZero makes the timer tick stop at 0 and wait for the ForceContinue method to be called
@@ -131,6 +131,8 @@ public class Stopwatch : MonoBehaviour
     //Method used for turning a count down timer into a count up timer and vice versa
     public void ChangeTimerDirection()
     {
+        _hasLimit = false;
+
         if (_isCountdown)
         {
             _isCountdown = false;
