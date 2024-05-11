@@ -5,13 +5,12 @@ using UnityEngine.Events;
 
 [System.Serializable]
 public class CustomGameEvent : UnityEvent<Component, object>
-{
-}
+{ }
 
 public class GameEventListener : MonoBehaviour
 {
     public GameEvent _gameEvent;
-    public UnityEvent _response;
+    public CustomGameEvent _response;
 
     private void OnEnable()
     {
