@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuControl : MonoBehaviour
 {
-    [SerializeField] SceneAsset startGame;
-
+    [SerializeField] private SceneAsset startGame;
+    private Button button;
+    private void Start()
+    {
+        button = GetComponent<Button>();
+    }
     public void BeginGame()
     {
         SceneManager.LoadScene(startGame.name);
@@ -15,5 +20,9 @@ public class MenuControl : MonoBehaviour
     public void Exit()
     {
         Application.Quit();
+    }
+    public void ChangeSelected()
+    {
+        button.Select();
     }
 }
