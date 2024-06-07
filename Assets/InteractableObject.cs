@@ -12,15 +12,15 @@ public class InteractableObject : MonoBehaviour
     private Collider2D _col2D;
 
     // Serialized Fields
-    [Tooltip("Obejto pode ser interagido")]
+    [Tooltip("The object can be interacted with")]
     [SerializeField]private bool isInteractable = true;
-    [Tooltip("Uma tecla é necessária para interagir com o objeto")]
+    [Tooltip("A key is required to interact with the object")]
     [SerializeField] private bool isKeyInteractable = true;
-    [Tooltip("Tecla para interagir com o objeto")]
+    [Tooltip("Key to interact with the object")]
     [SerializeField] private KeyCode interactKey = KeyCode.E;
-    [Tooltip("Filtro de colisão para interação")]
+    [Tooltip("Collision filter for interaction")]
     [SerializeField] private ContactFilter2D contactFilter;
-    [Tooltip("Evento de interação com o objeto")]
+    [Tooltip("Object interaction event")]
     [SerializeField] private UnityEvent<GameObject> onInteract;
 
 
@@ -45,10 +45,10 @@ public class InteractableObject : MonoBehaviour
 
         Collider2D[] colliders = new Collider2D[10];
 
-        // Checar se o collider do objeto está colidindo com algum outro objeto
+        // Checar se o collider do objeto estï¿½ colidindo com algum outro objeto
         if (_col2D.OverlapCollider(contactFilter, colliders) > 0)
         {
-            // Checar se o objeto com o qual está colidindo está na layer mask
+            // Checar se o objeto com o qual estï¿½ colidindo estï¿½ na layer mask
             if (colliders.Any(c => contactFilter.layerMask == (contactFilter.layerMask | (1 << c.gameObject.layer))))
             {
                 if (!isKeyInteractable)
