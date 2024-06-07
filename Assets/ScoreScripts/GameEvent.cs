@@ -16,6 +16,7 @@ public class GameEvent : ScriptableObject
         }
     }
 
+
     // Manage Listeners
     public void RegisterListener(GameEventListener listener)
     {
