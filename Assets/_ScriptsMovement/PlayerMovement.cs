@@ -1,3 +1,11 @@
+/*
+    Script levemente modificado baseado no script original do canal @DawnosaurDev no youtube : www.youtube.com/@DawnosaurDev
+
+    O script original foi modificado para se adaptar com o Novo Input System da Unity.
+
+    Se tiver mais interesse em entender sobre o desenvolvimento do script, por favor assista aos vídeos do canal @DawnosaurDev no youtube.
+*/
+
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
