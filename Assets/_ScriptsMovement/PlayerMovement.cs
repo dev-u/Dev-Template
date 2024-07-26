@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -261,7 +259,7 @@ public class PlayerMovement : MonoBehaviour
             Move(1);
 
         if (IsSliding)
-            Slider();
+            Slide();
     }
 
     public void SetGravityScale(float scale)
@@ -285,6 +283,11 @@ public class PlayerMovement : MonoBehaviour
 
         if (((_rb.velocity.x > targetSpeed && _moveInput.x < 0) || (_rb.velocity.x < targetSpeed && _moveInput.x < 0)) && Data.doConserveMomentum)
             accelRate = 0;
+
+        float speedDiff = targetSpeed - _rb.velocity.x;
+        float movement = speedDiff * accelRate;
+
+        _rb.AddForce(movement * Vector2.right, ForceMode2D.Force);
     }
 
     public void CheckDirectionToFace(bool isMovingRight)
@@ -302,7 +305,80 @@ public class PlayerMovement : MonoBehaviour
         IsFacingRight = !IsFacingRight;
     }
 
+    #endregion Move Methods
+
+    #region Jump Methods
+
     private void Jump()
     {
+        LastPressedJumpTime = 0;
+        LastOnGroundTime = 0;
+        float force = Data.jumpForce;
+
+        if (_rb.velocity.y < 0)
+        {
+            force -= _rb.velocity.y;
+        }
+        _rb.AddForce(Vector2.up * force, ForceMode2D.Impulse);
     }
+
+    private void WallJump(int dir)
+    {
+        LastPressedJumpTime = 0;
+        LastOnGroundTime = 0;
+        LastOnWallRightTime = 0;
+
+        Vector2 force = new Vector2(Data.wallJumpForce.x, Data.wallJumpForce.y);
+        force.x *= dir;
+
+        if (Mathf.Sign(_rb.velocity.x) != Mathf.Sign(force.x))
+        {
+            force.x += _rb.velocity.x;
+        }
+        if (_rb.velocity.y < 0)
+        {
+            force.y -= _rb.velocity.y;
+        }
+        _rb.AddForce(force, ForceMode2D.Impulse);
+    }
+
+    #endregion Jump Methods
+
+    #region Slide Methods
+
+    private void Slide()
+    {
+        _rb.velocity = new Vector2(0, -Data.slideSpeed);
+    }
+
+    #endregion Slide Methods
+
+    #region Check Methods
+
+    public bool CanJump()
+    {
+        return LastOnGroundTime > 0 && !IsJumping;
+    }
+
+    public bool CanWallJump()
+    {
+        return LastPressedJumpTime > 0 && LastOnWallTime > 0 && LastOnGroundTime <= 0;
+    }
+
+    public bool CanJumpCut()
+    {
+        return IsJumping && _rb.velocity.y > 0;
+    }
+
+    public bool CanWallJumpCut()
+    {
+        return IsWallJumping && _rb.velocity.y > 0;
+    }
+
+    public bool CanSlide()
+    {
+        return LastOnWallTime > 0 && !IsJumping && LastOnGroundTime <= 0;
+    }
+
+    #endregion Check Methods
 }

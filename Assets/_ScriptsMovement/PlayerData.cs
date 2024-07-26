@@ -66,7 +66,7 @@ public class PlayerData : ScriptableObject
 
     [Space(20)]
     [Header("Slide")]
-    public float sliedeSpeed;
+    public float slideSpeed;
 
     public float slideAccel;
 
