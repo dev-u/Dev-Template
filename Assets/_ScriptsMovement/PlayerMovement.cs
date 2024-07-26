@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -93,21 +94,17 @@ public class PlayerMovement : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext ctx)
     {
-        if (ctx.performed)
-        {
-            LastPressedJumpTime = Data.jumpInputBufferTime;
-        }
+        Debug.Log("Jump Pressed");
+
+        LastPressedJumpTime = Data.jumpInputBufferTime;
+        Debug.LogWarning(LastPressedJumpTime);
+        Debug.LogWarning("Buffer " + Data.jumpInputBufferTime);
     }
 
     public void OnJumpUp(InputAction.CallbackContext ctx)
     {
-        if (ctx.canceled)
-        {
-            if (CanJumpCut() || CanWallJumpCut())
-            {
-                _isJumpCut = true;
-            }
-        }
+        if (CanJumpCut() || CanWallJumpCut())
+            _isJumpCut = true;
     }
 
     #endregion Input Callbacks
@@ -137,6 +134,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (Physics2D.OverlapBox(_groundCheckPoint.position, _groundCheckSize, 0, _groundLayer) && !IsJumping)
             {
+                Debug.Log("On Ground");
                 LastOnGroundTime = Data.coyoteTime;
             }
 
@@ -179,6 +177,7 @@ public class PlayerMovement : MonoBehaviour
         // Jump
         if (CanJump() && LastPressedJumpTime > 0)
         {
+            Debug.Log("Can Jump");
             IsJumping = true;
             IsWallJumping = false;
             _isJumpCut = false;
@@ -281,7 +280,15 @@ public class PlayerMovement : MonoBehaviour
         else
             accelRate = (Mathf.Abs(targetSpeed) > 0.01f) ? Data.moveAccelAmount * Data.accelInAir : Data.moveDeccelAmount * Data.deccelInAir;
 
-        if (((_rb.velocity.x > targetSpeed && _moveInput.x < 0) || (_rb.velocity.x < targetSpeed && _moveInput.x < 0)) && Data.doConserveMomentum)
+        //Add Bonus Jump Apex Acceleration
+        if ((IsJumping || IsWallJumping || _isJumpFalling) && Mathf.Abs(_rb.velocity.y) < Data.jumpHangTimeThreshold)
+        {
+            accelRate *= Data.jumpHangAccelMult;
+            targetSpeed *= Data.jumpHangMaxSpeedMult;
+        }
+
+        //Conserve Momentum
+        if (Data.doConserveMomentum && Mathf.Abs(_rb.velocity.x) > Mathf.Abs(targetSpeed) && Mathf.Sign(_rb.velocity.x) == Mathf.Sign(targetSpeed) && Mathf.Abs(targetSpeed) > 0.01f && LastOnGroundTime < 0)
             accelRate = 0;
 
         float speedDiff = targetSpeed - _rb.velocity.x;
@@ -314,7 +321,8 @@ public class PlayerMovement : MonoBehaviour
         LastPressedJumpTime = 0;
         LastOnGroundTime = 0;
         float force = Data.jumpForce;
-
+        Debug.Log(Data.jumpForce);
+        Debug.Log("Jumping");
         if (_rb.velocity.y < 0)
         {
             force -= _rb.velocity.y;
@@ -348,7 +356,15 @@ public class PlayerMovement : MonoBehaviour
 
     private void Slide()
     {
-        _rb.velocity = new Vector2(0, -Data.slideSpeed);
+        if (_rb.velocity.y > 0)
+        {
+            _rb.AddForce(-_rb.velocity * Vector2.up, ForceMode2D.Impulse);
+        }
+        float speedDif = Data.slideSpeed - _rb.velocity.y;
+        float movement = speedDif * Data.slideAccel;
+
+        movement = Mathf.Clamp(movement, -Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime), Mathf.Abs(speedDif) * (1 / Time.fixedDeltaTime));
+        _rb.AddForce(movement * Vector2.up);
     }
 
     #endregion Slide Methods
@@ -381,4 +397,17 @@ public class PlayerMovement : MonoBehaviour
     }
 
     #endregion Check Methods
+
+    #region EDITOR METHODS
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireCube(_groundCheckPoint.position, _groundCheckSize);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireCube(_frontWallCheckPoint.position, _wallCheckSize);
+        Gizmos.DrawWireCube(_backWallCheckPoint.position, _wallCheckSize);
+    }
+
+    #endregion EDITOR METHODS
 }
